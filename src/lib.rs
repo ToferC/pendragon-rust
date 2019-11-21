@@ -1,13 +1,15 @@
 use rand::Rng;
 use std::collections;
+use std::fs::File;
+use std::io::Write;
 
 #[derive(Debug)]
 pub struct Character {
     // Represents a character in Pendragon
     pub name: String,
     pub homeland: Homeland,
-    pub culture: Culture,
-    pub religion: Religion,
+    pub culture: String,
+    pub religion: String,
     pub titles: String,
     pub home: String,
     pub age: u32,
@@ -35,19 +37,8 @@ impl Default for Character {
         let mut c = Character {
             name: String::from(""),
             homeland: Homeland::Salisbury,
-            culture: Culture {
-                name: String::from("Cymric"),
-                modifier: String::from("CON"),
-                value: 3,
-            },
-            religion: Religion {
-                name: String::from("Christian"),
-                virtues: vec!{"Chaste".to_string(),
-                             "Forgiving".to_string(),
-                             "Merciful".to_string(),
-                             "Modest".to_string(),
-                             "Temperate".to_string()}
-                            },
+            culture: String::from("Cymric"),
+            religion: String::from("Christian"),
             titles: String::from(""),
             home: String::from(""),
             age: 21,
@@ -109,6 +100,13 @@ impl Character {
         }
     }
 
+    pub fn save(&self) -> std::io::Result<()> {
+        let c_str = format!("{:#?}", self);
+    
+        let mut file = File::create(format!("{}.txt", self.name))?;
+        file.write_all(&c_str.into_bytes())?;
+        Ok(())
+    }
 }
 
 #[derive(Debug)]
@@ -123,10 +121,33 @@ pub struct Culture {
     value: u32,
 }
 
+impl Default for Culture {
+    fn default() -> Culture {
+        Culture {
+            name: String::from("Cymric"),
+            modifier: String::from("CON"),
+            value: 3,
+        }
+    }
+}
+
 #[derive(Debug)]
 pub struct Religion {
     name: String,
     virtues: Vec<String>,
+}
+
+impl Default for Religion {
+    fn default() -> Religion {
+        Religion {
+            name: String::from("Christian"),
+            virtues: vec!{"Chaste".to_string(),
+                         "Forgiving".to_string(),
+                         "Merciful".to_string(),
+                         "Modest".to_string(),
+                         "Temperate".to_string()}
+                        }
+    }
 }
 
 #[derive(Debug)]
@@ -161,6 +182,8 @@ pub fn roll_em(dice: u32, sides: u32, mods: u32) -> u32 {
     };
 
     total += mods;
+
+    println!("Roll {}d{}+{}: result of {}", dice, sides, mods, &total);
 
     total
 }
