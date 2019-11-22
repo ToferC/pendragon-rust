@@ -1,6 +1,20 @@
-use Character;
+use crate::character::Character;
+use crate::rules::roll_em;
 
-fn attack(c: &Character, target: &Character) -> Attack {
+#[derive(Debug)]
+pub struct Attack {
+    pub attack_result: AttackResult,
+    pub damage: u32,
+}
+
+#[derive(Debug)]
+pub enum AttackResult {
+    Hit,
+    Miss,
+    Critical,
+}
+
+pub fn attack(c: &Character, target: &Character) -> Attack {
 
     println!{"{} attacks {} with a {}", c.name, target.name, c.weapon.name};
 
