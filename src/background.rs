@@ -1,9 +1,11 @@
+use serde::{Serialize, Deserialize};
+
 #[derive(Debug)]
 pub enum Homeland {
     Salisbury,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Culture {
     name: String,
     modifier: String,
@@ -20,7 +22,7 @@ impl Default for Culture {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Religion {
     name: String,
     virtues: Vec<String>,

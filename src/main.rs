@@ -1,16 +1,8 @@
-use pendragon::character::Character;
+use pendragon::character::{Character, load_character};
 use pendragon::combat::combat;
+use pendragon::actions::unopposed_roll;
 
-use std::fs::File;
-use std::io::{prelude::*, stdin};
-
-
-fn load_character(n: &String) -> std::io::Result<String> {
-    let mut file = File::open(format!("{}.txt", n))?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
-    Ok(contents)
-}
+use std::io::stdin;
 
 fn main() -> std::io::Result<()> {
 
@@ -31,15 +23,21 @@ fn main() -> std::io::Result<()> {
     println!("\nLoading Character\n");
     let result = load_character(&c.name);
 
-    let output = match result {
-        Ok(output) => output,
+    let mut g = match result {
+        Ok(g) => g,
         Err(e) => return Err(e),
     };
 
     println!("\nPrinting Character\n");
 
-    println!("{}", output);
+    println!("{:#?}\n", g);
 
+    // Skill roll - Unopposed
+
+    let s1 = unopposed_roll(&g.name, "Sword", g.skills["Sword"], 0);
+
+    println!("{:#?}\n", s1);
+    
     // Second Knight
     let mut d = Character::default();
 
@@ -53,7 +51,7 @@ fn main() -> std::io::Result<()> {
     println!("\nSaving Character\n");
     d.save()?;
 
-    combat(&mut c, &mut d);
+    combat(&mut g, &mut d);
 
     Ok(())
     

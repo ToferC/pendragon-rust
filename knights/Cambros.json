@@ -1,0 +1,73 @@
+{
+  "name": "Cambros",
+  "glory": 168,
+  "homeland": "Salisbury",
+  "culture": "Cymric",
+  "religion": "Christian",
+  "titles": "Sir",
+  "home": "Gloucester",
+  "age": 21,
+  "year_born": 468,
+  "traits": [],
+  "passions": [],
+  "size": 12,
+  "dexterity": 11,
+  "strength": 11,
+  "constitution": 12,
+  "appearance": 13,
+  "features": [
+    "Long Hair"
+  ],
+  "weapon": {
+    "name": "Sword",
+    "damage": 0
+  },
+  "armor": {
+    "name": "Chainmail",
+    "value": 12
+  },
+  "shield": {
+    "name": "Kite",
+    "value": 12
+  },
+  "damage": 3,
+  "healing_rate": 2,
+  "movement_rate": 2,
+  "total_hit_points": 24,
+  "hit_points": 24,
+  "unconscious": 6,
+  "state": "Up",
+  "distinctive_features": [],
+  "skills": {
+    "Play (Harp)": 3,
+    "Lance": 10,
+    "Tourney": 2,
+    "Dancing": 2,
+    "Intrigue": 3,
+    "Compose": 1,
+    "Falconry": 3,
+    "Recongize": 3,
+    "Stewardship": 2,
+    "Battle": 10,
+    "Horsemanship": 10,
+    "Courtesy": 3,
+    "Flirting": 3,
+    "Hunting": 2,
+    "Orate": 3,
+    "Read (Latin)": 0,
+    "Folk Lore": 2,
+    "Singing": 2,
+    "Spear": 6,
+    "Heraldry": 3,
+    "Dagger": 5,
+    "Awareness": 5,
+    "Boating": 1,
+    "Swimming": 2,
+    "Religion (Christianity)": 2,
+    "Gaming": 3,
+    "First Aid": 10,
+    "Romance": 2,
+    "Sword": 10,
+    "Faerie Lore": 1
+  }
+}

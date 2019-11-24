@@ -1,4 +1,6 @@
-#[derive(Debug)]
+use serde::{Serialize, Deserialize};
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Armor {
     name: String,
     value: u32,
@@ -13,7 +15,7 @@ impl Default for Armor {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Shield {
     name: String,
     value: u32,

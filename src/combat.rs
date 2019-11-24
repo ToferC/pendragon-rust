@@ -9,7 +9,8 @@ pub fn combat<'a>(c: &'a mut Character, target: &'a mut Character) {
 
     let mut counter = 0;
 
-    while combatants[0].state != CharacterState::Unconscious && combatants[1].state != CharacterState::Unconscious {
+    while (combatants[0].state != CharacterState::Unconscious || combatants[0].state != CharacterState::Dead)
+    && (combatants[0].state != CharacterState::Unconscious || combatants[1].state != CharacterState::Dead) {
         let t: usize;
 
         if counter == 0 {

@@ -1,18 +1,21 @@
 use std::collections;
 use std::fs::File;
-use std::io::Write;
+use std::io::{Write, BufReader};
+
+use serde::{Serialize, Deserialize};
+use serde_json;
 
 use crate::background::Homeland;
 use crate::rules::roll_em;
-use crate::skill::Skill;
 use crate::weapon;
 use crate::armor;
 
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Character {
     // Represents a character in Pendragon
     pub name: String,
-    pub homeland: Homeland,
+    pub glory: u32,
+    pub homeland: String,
     pub culture: String,
     pub religion: String,
     pub titles: String,
@@ -26,10 +29,11 @@ pub struct Character {
     pub strength: u32,
     pub constitution: u32,
     pub appearance: u32,
+    pub features: Vec<String>,
     pub weapon: weapon::Weapon,
     pub armor: armor::Armor,
     pub shield: armor::Shield,
-    damage: u32,
+    pub damage: u32,
     healing_rate: u32,
     movement_rate: u32,
     total_hit_points: i32,
@@ -37,14 +41,15 @@ pub struct Character {
     unconscious: i32,
     pub state: CharacterState,
     pub distinctive_features: Vec<String>,
-    pub skills: collections::HashMap<String, Skill>,
+    pub skills: collections::HashMap<String, u32>,
 }
 
 impl Default for Character {
     fn default() -> Character {
         let mut c = Character {
             name: String::from(""),
-            homeland: Homeland::Salisbury,
+            glory: roll_em(6, 6, 0) + 150,
+            homeland: String::from("Salisbury"),
             culture: String::from("Cymric"),
             religion: String::from("Christian"),
             titles: String::from("Sir"),
@@ -58,6 +63,7 @@ impl Default for Character {
             strength: roll_em(3, 6, 0),
             constitution: roll_em(3, 6, 0),
             appearance: roll_em(3, 6, 0),
+            features: Vec::new(),
             weapon: weapon::Weapon::default(),
             armor: armor::Armor::default(),
             shield: armor::Shield::default(),
@@ -82,6 +88,49 @@ impl Default for Character {
         c.unconscious = c.total_hit_points / 4;
 
         c.hit_points = c.total_hit_points;
+
+        // Add features
+
+        if c.appearance > 12 {
+            c.features.push("Long Hair".to_string());
+        }
+
+        // Add base skills
+
+        c.skills.insert("Awareness".to_string(), 5);
+        c.skills.insert("Boating".to_string(), 1);
+        c.skills.insert("Compose".to_string(), 1);
+        c.skills.insert("Courtesy".to_string(), 3);
+        c.skills.insert("Dancing".to_string(), 2);
+        c.skills.insert("Faerie Lore".to_string(), 1);
+        c.skills.insert("Falconry".to_string(), 3);
+        c.skills.insert("First Aid".to_string(), 10);
+        c.skills.insert("Flirting".to_string(), 3);
+        c.skills.insert("Folk Lore".to_string(), 2);
+        c.skills.insert("Gaming".to_string(), 3);
+        c.skills.insert("Heraldry".to_string(), 3);
+        c.skills.insert("Hunting".to_string(), 2);
+        c.skills.insert("Intrigue".to_string(), 3);
+        c.skills.insert("Orate".to_string(), 3);
+        c.skills.insert("Play (Harp)".to_string(), 3);
+        c.skills.insert("Read (Latin)".to_string(), 0);
+        c.skills.insert("Recongize".to_string(), 3);
+        c.skills.insert("Religion (Christianity)".to_string(), 2);
+        c.skills.insert("Romance".to_string(), 2);
+        c.skills.insert("Singing".to_string(), 2);
+        c.skills.insert("Stewardship".to_string(), 2);
+        c.skills.insert("Swimming".to_string(), 2);
+        c.skills.insert("Tourney".to_string(), 2);
+        c.skills.insert("Battle".to_string(), 10);
+        c.skills.insert("Horsemanship".to_string(), 10);
+        c.skills.insert("Sword".to_string(), 10);
+        c.skills.insert("Lance".to_string(), 10);
+        c.skills.insert("Spear".to_string(), 6);
+        c.skills.insert("Dagger".to_string(), 5);
+
+        // Character improvement
+
+        // Return Character
 
         c
     }
@@ -111,27 +160,35 @@ impl Character {
     }
 
     pub fn save(&self) -> std::io::Result<()> {
-        let c_str = format!("{:#?}", self);
+        let serialized = serde_json::to_string_pretty(&self)?;
     
-        let mut file = File::create(format!("{}.txt", self.name))?;
-        file.write_all(&c_str.into_bytes())?;
+        let mut file = File::create(format!("./knights/{}.json", self.name))?;
+        file.write_all(&serialized.into_bytes())?;
         Ok(())
     }
 }
 
-#[derive(Debug)]
+pub fn load_character(n: &String) -> std::io::Result<Character> {
+    let file = File::open(format!("./knights/{}.json", n))?;
+    let reader = BufReader::new(file);
+    let character = serde_json::from_reader(reader)?;
+    
+    Ok(character)
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Trait {
     name: String,
     value: u32,
 }
 
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Passion {
     name: String,
     value: u32,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub enum CharacterState {
     Up,
     Unconscious,
