@@ -51,9 +51,11 @@ fn main() -> std::io::Result<()> {
     println!("\nSaving Character\n");
     d.save()?;
 
-    let or = opposed_roll(&g, &String::from("Sword"), 0, &d, &String::from("Sword"), 0);
-
-    println!("{:#?}", or);
+    for _ in 1..10 {
+        let or = opposed_roll(&g, &String::from("Sword"), 0, &d, &String::from("Sword"), 0);
+    
+        println!("{:#?}", or);
+    }
     //combat(&mut g, &mut d);
 
     Ok(())

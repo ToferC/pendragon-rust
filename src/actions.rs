@@ -173,7 +173,7 @@ pub fn opposed_roll(a: &Character, a_skill: &String, a_mods: u32, b: &Character,
                     println!("{} Wins", &a.name);
                     OpposedResult::AWins( RollResult::Success( a_r ))
                 } else {
-                    println!("{} Wins", &a.name);
+                    println!("{} Wins", &b.name);
                     OpposedResult::BWins( RollResult::Success( b_r ))
                 }
             },
@@ -192,6 +192,9 @@ pub fn opposed_roll(a: &Character, a_skill: &String, a_mods: u32, b: &Character,
                 OpposedResult::BWins( RollResult::Success ( b_r ))
             },
 
+        // Still more to do here
+        // Fumble tracking
+        
         _ => {
             println!("Tie");
             OpposedResult::Tie( RollResult::Tie ( 1 ))
