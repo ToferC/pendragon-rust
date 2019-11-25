@@ -9,11 +9,15 @@ pub struct Attack {
 
 #[derive(Debug)]
 pub enum AttackResult {
-    Hit,
-    Miss,
     Critical,
+    CriticalBlock,
+    Hit,
+    HitBlock,
+    Special,
+    Miss,
 }
 
+#[derive(Debug)]
 pub struct CompareRolls {
     a: RollResult,
     b: RollResult,
@@ -25,7 +29,9 @@ pub enum RollResult {
     Failure ( u32 ),
     Tie ( u32 ),
     Potential ( u32 ),
+    PartialSuccess ( u32 ),
     Success ( u32 ),
+    PartialCritical ( u32 ),
     Critical ( u32 ),
 }
 
@@ -64,7 +70,7 @@ pub fn evaluate_roll(mut roll: u32, mut value: u32) -> RollResult {
         // Roll == value -> Crit
         r if r == value => {
             println!("Critical!");
-            RollResult::Critical( roll )
+            RollResult::Critical( 20 )
         },
         // Roll == 20 and value != 20 -> Fumble
         20 => {
@@ -171,10 +177,10 @@ pub fn opposed_roll(a: &Character, a_skill: &String, a_mods: u32, b: &Character,
                     OpposedResult::Tie( RollResult::Critical ( a_r ))
                 } else if a_r > b_r {
                     println!("{} Wins", &a.name);
-                    OpposedResult::AWins( RollResult::Success( a_r ))
+                    OpposedResult::AWins( RollResult::PartialSuccess( a_r ))
                 } else {
                     println!("{} Wins", &b.name);
-                    OpposedResult::BWins( RollResult::Success( b_r ))
+                    OpposedResult::BWins( RollResult::PartialSuccess( b_r ))
                 }
             },
 

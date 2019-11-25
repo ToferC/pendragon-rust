@@ -1,36 +1,96 @@
 use crate::character::{Character, CharacterState};
+use crate::actions::*;
+use crate::rules::*;
+
 // use crate::actions::attack;
 
-pub fn combat<'a>(c: &'a mut Character, target: &'a mut Character) {
+pub fn combat<'a>(a: &'a mut Character, b: &'a mut Character) {
     
-    let mut combatants = vec!{c, target};
-
     // Update combat to have active state & match for combatant states
 
     println!("Attacking!");
 
-    let mut counter = 0;
+    while a.state != CharacterState::Dead && b.state != CharacterState::Dead {
 
-    while combatants[0].state != CharacterState::Dead && combatants[1].state != CharacterState::Dead {
-        let t: usize;
+        let opposed = opposed_roll(a, &"Sword".to_string(), 0, b, &"Sword".to_string(), 0);
+        println!("{:#?}", opposed);
 
-        if counter == 0 {
-            t = 1
-        } else {
-            t = 0
-        };
+        match opposed {
+            OpposedResult::AWins( RollResult::Critical ( _ )) => {
+                let dam = roll_em(a.damage, 6, 0) * 2;
+                if dam < b.armor.reduction {
+                    println!{"Armor protects!"};
+                } else {
+                    b.harm(dam - b.armor.reduction);
+                }
+            },
 
-        // let a = attack(combatants[counter], combatants[t]);
-        println!("{:?}", a);
+            OpposedResult::BWins( RollResult::Critical ( _ )) => {
+                let dam = roll_em(b.damage, 6, 0) * 2;
+                 if dam < a.armor.reduction {
+                    println!{"Armor protects!"};
+                 } else {
+                     a.harm(dam - a.armor.reduction);
+                 }
+            },
 
-        if a.damage > 0 {
-            combatants[t].harm(a.damage as i32);
+            OpposedResult::AWins( RollResult::PartialCritical ( _ )) => {
+                let dam = roll_em(a.damage, 6, 0) * 2;
+                if dam < b.armor.reduction + b.shield.value {
+                    println!{"Armor protects!"};
+                 } else {
+                     b.harm(dam - b.armor.reduction - b.shield.value);
+                 }
+            },
+
+            OpposedResult::BWins( RollResult::PartialCritical ( _ )) => {
+                let dam = roll_em(b.damage, 6, 0) * 2;
+                if dam < a.armor.reduction + a.shield.value {
+                    println!{"Armor protects!"};
+                 } else {
+                     a.harm(dam - a.armor.reduction - a.shield.value);
+                 }
+            },
+
+            OpposedResult::AWins( RollResult::Success ( _ )) => {
+                let dam = roll_em(a.damage, 6, 0);
+                if dam < b.armor.reduction {
+                    println!{"Armor protects!"};
+                 } else {
+                     b.harm(dam - b.armor.reduction);
+                 }
+            },
+
+            OpposedResult::BWins( RollResult::Success ( _ )) => {
+                let dam = roll_em(b.damage, 6, 0);
+                if dam < a.armor.reduction {
+                    println!{"Armor protects!"};
+                 } else {
+                     a.harm(dam - a.armor.reduction);
+                 }
+            },
+
+            OpposedResult::AWins( RollResult::PartialSuccess ( _ )) => {
+                let dam = roll_em(a.damage, 6, 0);
+                if dam < b.armor.reduction + b.shield.value {
+                    println!{"Armor protects!"};
+                 } else {
+                     b.harm(dam - b.armor.reduction - b.shield.value);
+                 }
+            },
+
+            OpposedResult::BWins( RollResult::PartialSuccess ( _ )) => {
+                let dam = roll_em(b.damage, 6, 0);
+                if dam < a.armor.reduction + a.shield.value {
+                    println!{"Armor protects!"};
+                 } else {
+                     a.harm(dam - a.armor.reduction - a.shield.value);
+                 }
+            },
+
+            _ => (),
         }
+        
 
-        if counter == 0 {
-            counter = 1
-        } else {
-            counter = 0
-        };
     };
 }

@@ -2,10 +2,10 @@ use serde::{Serialize, Deserialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Armor {
-    name: String,
-    reduction: u32,
-    dex_modifier: i32,
-    heavy_load: bool,
+    pub name: String,
+    pub reduction: u32,
+    pub dex_modifier: i32,
+    pub heavy_load: bool,
 }
 
 impl Default for Armor {
@@ -21,8 +21,8 @@ impl Default for Armor {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Shield {
-    name: String,
-    value: u32,
+    pub name: String,
+    pub value: u32,
 }
 
 impl Default for Shield {

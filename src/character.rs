@@ -113,7 +113,7 @@ impl Default for Character {
         c.skills.insert("Orate".to_string(), 3);
         c.skills.insert("Play (Harp)".to_string(), 3);
         c.skills.insert("Read (Latin)".to_string(), 0);
-        c.skills.insert("Recongize".to_string(), 3);
+        c.skills.insert("Recognize".to_string(), 3);
         c.skills.insert("Religion (Christianity)".to_string(), 2);
         c.skills.insert("Romance".to_string(), 2);
         c.skills.insert("Singing".to_string(), 2);
@@ -128,6 +128,7 @@ impl Default for Character {
         c.skills.insert("Dagger".to_string(), 5);
 
         // Character improvement
+        *c.skills.get_mut("Sword").unwrap() += 5;
 
         // Return Character
 
@@ -136,8 +137,8 @@ impl Default for Character {
 }
 
 impl Character {
-    pub fn harm(&mut self, damage: i32) {
-        self.hit_points -= damage;
+    pub fn harm(&mut self, damage: u32) {
+        self.hit_points -= damage as i32;
         match self.hit_points {
             h if h < 0 => self.state = CharacterState::Dead,
             h if h <= self.unconscious => self.state = CharacterState::Unconscious,

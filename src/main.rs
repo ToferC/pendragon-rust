@@ -1,6 +1,6 @@
 use pendragon::character::{Character, load_character};
-// use pendragon::combat::combat;
-use pendragon::actions::{unopposed_roll, opposed_roll};
+use pendragon::combat::*;
+use pendragon::actions::{unopposed_roll};
 
 use std::io::stdin;
 
@@ -51,12 +51,7 @@ fn main() -> std::io::Result<()> {
     println!("\nSaving Character\n");
     d.save()?;
 
-    for _ in 1..10 {
-        let or = opposed_roll(&g, &String::from("Sword"), 0, &d, &String::from("Sword"), 0);
-    
-        println!("{:#?}", or);
-    }
-    //combat(&mut g, &mut d);
+    combat(&mut g, &mut d);
 
     Ok(())
     
