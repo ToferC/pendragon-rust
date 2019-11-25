@@ -5,7 +5,6 @@ use std::io::{Write, BufReader};
 use serde::{Serialize, Deserialize};
 use serde_json;
 
-use crate::background::Homeland;
 use crate::rules::roll_em;
 use crate::weapon;
 use crate::armor;
@@ -147,8 +146,10 @@ impl Character {
         
         println!("{} has {} hit points left!", self.name, self.hit_points);
         
-        if self.state == CharacterState::Unconscious {
-            println!("{} is out!", self.name)
+        match self.state {
+            CharacterState::Unconscious => println!("{} is out!", self.name),
+            CharacterState::Dead => println!("{} is dead!", self.name),
+            _ => ()
         } 
     }
 

@@ -3,14 +3,18 @@ use serde::{Serialize, Deserialize};
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Armor {
     name: String,
-    value: u32,
+    reduction: u32,
+    dex_modifier: i32,
+    heavy_load: bool,
 }
 
 impl Default for Armor {
     fn default() -> Armor {
         Armor {
             name: String::from("Chainmail"),
-            value: 12,
+            reduction: 10,
+            dex_modifier: -10,
+            heavy_load: true,
         }
     }
 }
@@ -24,8 +28,8 @@ pub struct Shield {
 impl Default for Shield {
     fn default() -> Shield {
         Shield {
-            name: String::from("Kite"),
-            value: 12,
+            name: String::from("Shield"),
+            value: 6,
         }
     }
 }
