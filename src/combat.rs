@@ -18,8 +18,10 @@ pub fn combat<'a>(a: &'a mut Character, b: &'a mut Character) {
         match opposed {
             OpposedResult::AWins( RollResult::Critical ( _ )) => {
                 let dam = roll_em(a.damage, 6, 0) * 2;
-                if dam < b.armor.reduction {
-                    println!{"Armor protects!"};
+                println!("Hit for {} damage!", &dam);
+                println!{"Armor reduces damage by {}!", b.armor.reduction};
+                if dam <= b.armor.reduction {
+                    println!("No damage!")
                 } else {
                     b.harm(dam - b.armor.reduction);
                 }
@@ -27,8 +29,10 @@ pub fn combat<'a>(a: &'a mut Character, b: &'a mut Character) {
 
             OpposedResult::BWins( RollResult::Critical ( _ )) => {
                 let dam = roll_em(b.damage, 6, 0) * 2;
-                 if dam < a.armor.reduction {
-                    println!{"Armor protects!"};
+                println!("Hit for {} damage!", &dam);
+                println!{"Armor reduces damage by {}!", a.armor.reduction};
+                 if dam <= a.armor.reduction {
+                    println!("No damage!")
                  } else {
                      a.harm(dam - a.armor.reduction);
                  }
@@ -36,8 +40,11 @@ pub fn combat<'a>(a: &'a mut Character, b: &'a mut Character) {
 
             OpposedResult::AWins( RollResult::PartialCritical ( _ )) => {
                 let dam = roll_em(a.damage, 6, 0) * 2;
-                if dam < b.armor.reduction + b.shield.value {
-                    println!{"Armor protects!"};
+                println!("Hit for {} damage!", &dam);
+                println!{"Armor reduces damage by {}!", b.armor.reduction};
+                println!("Shield reduces damage by {}!", b.shield.value);
+                if dam <= (b.armor.reduction + b.shield.value) {
+                    println!("No damage!")
                  } else {
                      b.harm(dam - b.armor.reduction - b.shield.value);
                  }
@@ -45,8 +52,11 @@ pub fn combat<'a>(a: &'a mut Character, b: &'a mut Character) {
 
             OpposedResult::BWins( RollResult::PartialCritical ( _ )) => {
                 let dam = roll_em(b.damage, 6, 0) * 2;
-                if dam < a.armor.reduction + a.shield.value {
-                    println!{"Armor protects!"};
+                println!("Hit for {} damage!", &dam);
+                println!{"Armor reduces damage by {}!", a.armor.reduction};
+                println!("Shield reduces damage by {}!", a.shield.value);
+                if dam <= (a.armor.reduction + a.shield.value) {
+                    println!("No damage!")
                  } else {
                      a.harm(dam - a.armor.reduction - a.shield.value);
                  }
@@ -54,8 +64,10 @@ pub fn combat<'a>(a: &'a mut Character, b: &'a mut Character) {
 
             OpposedResult::AWins( RollResult::Success ( _ )) => {
                 let dam = roll_em(a.damage, 6, 0);
-                if dam < b.armor.reduction {
-                    println!{"Armor protects!"};
+                println!("Hit for {} damage!", &dam);
+                println!{"Armor reduces damage by {}!", b.armor.reduction};
+                if dam <= b.armor.reduction {
+                    println!("No damage!")
                  } else {
                      b.harm(dam - b.armor.reduction);
                  }
@@ -63,8 +75,10 @@ pub fn combat<'a>(a: &'a mut Character, b: &'a mut Character) {
 
             OpposedResult::BWins( RollResult::Success ( _ )) => {
                 let dam = roll_em(b.damage, 6, 0);
-                if dam < a.armor.reduction {
-                    println!{"Armor protects!"};
+                println!("Hit for {} damage!", &dam);
+                println!{"Armor reduces damage by {}!", a.armor.reduction};
+                if dam <= a.armor.reduction {
+                    println!("No damage!")
                  } else {
                      a.harm(dam - a.armor.reduction);
                  }
@@ -72,8 +86,11 @@ pub fn combat<'a>(a: &'a mut Character, b: &'a mut Character) {
 
             OpposedResult::AWins( RollResult::PartialSuccess ( _ )) => {
                 let dam = roll_em(a.damage, 6, 0);
-                if dam < b.armor.reduction + b.shield.value {
-                    println!{"Armor protects!"};
+                println!("Hit for {} damage!", &dam);
+                println!{"Armor reduces damage by {}!", b.armor.reduction};
+                println!("Shield reduces damage by {}!", b.shield.value);
+                if dam <= (b.armor.reduction + b.shield.value) {
+                    println!("No damage!")
                  } else {
                      b.harm(dam - b.armor.reduction - b.shield.value);
                  }
@@ -81,8 +98,11 @@ pub fn combat<'a>(a: &'a mut Character, b: &'a mut Character) {
 
             OpposedResult::BWins( RollResult::PartialSuccess ( _ )) => {
                 let dam = roll_em(b.damage, 6, 0);
-                if dam < a.armor.reduction + a.shield.value {
-                    println!{"Armor protects!"};
+                println!("Hit for {} damage!", &dam);
+                println!{"Armor reduces damage by {}!", a.armor.reduction};
+                println!("Shield reduces damage by {}!", a.shield.value);
+                if dam <= (a.armor.reduction + a.shield.value) {
+                    println!("No damage!")
                  } else {
                      a.harm(dam - a.armor.reduction - a.shield.value);
                  }

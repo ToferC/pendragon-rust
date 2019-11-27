@@ -138,6 +138,8 @@ impl Default for Character {
 
 impl Character {
     pub fn harm(&mut self, damage: u32) {
+
+        println!("{} is hit for {} damage!", self.name, damage);
         self.hit_points -= damage as i32;
         match self.hit_points {
             h if h < 0 => self.state = CharacterState::Dead,
