@@ -150,8 +150,8 @@ impl Character {
         println!("{} has {} hit points left!", self.name, self.hit_points);
         
         match self.state {
-            CharacterState::Unconscious => println!("{} is out!", self.name),
-            CharacterState::Dead => println!("{} is dead!", self.name),
+            CharacterState::Unconscious => println!("{} is knocked unconscious!", self.name),
+            CharacterState::Dead => println!("{} is killed!", self.name),
             _ => ()
         } 
     }
