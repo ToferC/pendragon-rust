@@ -3,6 +3,64 @@ use crate::actions::*;
 use crate::rules::*;
 use crate::weapon::*;
 
+pub struct Combat<'a> {
+    fighters: Vec<&'a mut Character>,
+    pub active: bool,
+    pub round: u32,
+}
+
+impl<'a> Combat<'a> {
+    pub fn new() -> Combat<'a> {
+        Combat {
+            fighters: Vec::new(),
+            active: true,
+            round: 1,
+        }
+    }
+
+    pub fn add_fighter(&mut self, c: &'a mut Character) {
+        self.fighters.push(c);
+    }
+
+    pub fn remove_fighter(&mut self, i: usize) {
+        self.fighters.remove(i);
+    }
+
+    pub fn start(&mut self) {
+
+        println!("Combat!");
+        let b = self.fighters.pop().unwrap();
+
+        let a = self.fighters.pop().unwrap();
+
+        while self.active {
+
+
+            println!("ROUND {}!\n----------------------\n", self.round);
+
+            // Determination Phase
+
+            let opposed = opposed_roll(a, &"Sword".to_string(), 0, b, &"Sword".to_string(), 0);
+            println!("{}", opposed);
+
+            // Resolution Phase
+
+            resolve_round(opposed, a, b);
+
+            // Check to see if combat continues
+            if (a.state == CharacterState::Unconscious || a.state == CharacterState::Dead) || (b.state == CharacterState::Unconscious || b.state == CharacterState::Dead) {
+                self.active = false;
+                break;
+            }
+
+            self.round += 1;
+
+        };
+
+        println!("\nFIGHT LASTED {} ROUNDS", self.round);
+    }
+}
+
 pub enum Action {
     ExchangeBlows ( Character ),
     Attack ( Character ),
@@ -19,36 +77,6 @@ pub enum Modifiers {
     Suprise ( i32 ),
     Unencumbered ( i32 ),
     Visibility ( i32 ),
-}
-
-// use crate::actions::attack;
-
-pub fn combat<'a>(a: &'a mut Character, b: &'a mut Character) {
-    
-    // Update combat to have active state & match for combatant states
-
-    println!("Attacking!");
-
-    let mut counter: u32 = 1;
-
-    while (a.state != CharacterState::Unconscious && a.state != CharacterState::Dead) && (b.state != CharacterState::Unconscious && b.state != CharacterState::Dead) {
-
-        println!("ROUND {}!\n----------------------\n", counter);
-
-        // Determination Phase
-
-        let opposed = opposed_roll(a, &"Sword".to_string(), 0, b, &"Sword".to_string(), 0);
-        println!("{:#?}", opposed);
-
-        // Resolution Phase
-
-        resolve_round(opposed, a, b);
-
-        counter += 1;
-
-    };
-
-    println!("\nFIGHT LASTED {} ROUNDS", counter);
 }
 
 fn resolve_round(op: OpposedResult, a: &mut Character, b: &mut Character) {

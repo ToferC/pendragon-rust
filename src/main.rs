@@ -2,18 +2,14 @@ use pendragon::character::{Character, load_character};
 use pendragon::combat::*;
 use pendragon::actions::{unopposed_roll};
 
-use std::io::stdin;
-
 fn main() -> std::io::Result<()> {
+
+    let mut combat = Combat::new();
 
     // First Knight
     let mut c = Character::default();
 
-    let mut name = String::new();
-    println!("Enter the first knight's name: ");
-    stdin().read_line(&mut name)?;
-
-    c.name = name.trim_end_matches("\n").to_string();
+    &c.rename();
 
     // Save character
     println!("\nSaving Character\n");
@@ -28,6 +24,11 @@ fn main() -> std::io::Result<()> {
         Err(e) => return Err(e),
     };
 
+    *g.skills.get_mut("Sword").unwrap() += 15;
+    g.strength = 15;
+    g.constitution = 15;
+    g.size = 15;
+
     println!("\nPrinting Character\n");
 
     println!("{:#?}\n", g);
@@ -41,17 +42,12 @@ fn main() -> std::io::Result<()> {
     // Second Knight
     let mut d = Character::default();
 
-    name = String::new();
+    d.name = String::from("Brigand One");
 
-    println!("Enter the second knight's name: ");
-    stdin().read_line(&mut name)?;
+    combat.add_fighter(&mut g);
+    combat.add_fighter(&mut d);
 
-    d.name = name.trim_end_matches("\n").to_string();
-
-    println!("\nSaving Character\n");
-    d.save()?;
-
-    combat(&mut g, &mut d);
+    combat.start();
 
     Ok(())
     

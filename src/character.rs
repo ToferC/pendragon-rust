@@ -1,6 +1,7 @@
 use std::collections;
 use std::fs::File;
 use std::io::{Write, BufReader};
+use std::io::stdin;
 
 use serde::{Serialize, Deserialize};
 use serde_json;
@@ -19,6 +20,7 @@ pub struct Character {
     pub religion: String,
     pub titles: String,
     pub home: String,
+    pub faction: Faction,
     pub age: u32,
     pub year_born: u32,
     pub traits: Vec<Trait>,
@@ -53,6 +55,7 @@ impl Default for Character {
             religion: String::from("Christian"),
             titles: String::from("Sir"),
             home: String::from("Gloucester"),
+            faction: Faction::Hero,
             age: 21,
             year_born: 468,
             traits: Vec::new(),
@@ -128,7 +131,8 @@ impl Default for Character {
         c.skills.insert("Dagger".to_string(), 5);
 
         // Character improvement
-        *c.skills.get_mut("Sword").unwrap() += 5;
+
+        // *c.skills.get_mut("Sword").unwrap() += 5;
 
         // Return Character
 
@@ -170,6 +174,17 @@ impl Character {
         file.write_all(&serialized.into_bytes())?;
         Ok(())
     }
+
+    pub fn rename(&mut self) -> std::io::Result<()> {
+        let mut name = String::new();
+
+        println!("Enter the knight's name: ");
+        stdin().read_line(&mut name)?;
+
+        self.name = name.trim_end_matches("\n").to_string();
+
+        Ok(())
+    }
 }
 
 pub fn load_character(n: &String) -> std::io::Result<Character> {
@@ -178,6 +193,12 @@ pub fn load_character(n: &String) -> std::io::Result<Character> {
     let character = serde_json::from_reader(reader)?;
     
     Ok(character)
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub enum Faction {
+    Hero,
+    Villain,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

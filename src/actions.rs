@@ -1,10 +1,18 @@
 use crate::character::Character;
 use crate::rules::roll_em;
+use std::fmt;
 
 #[derive(Debug)]
 pub struct Attack {
     pub attack_result: AttackResult,
     pub damage: u32,
+}
+
+#[derive(Debug)]
+pub struct Action<'a> {
+    pub character: Character,
+    pub skill: &'a String,
+    pub modifier: i64,
 }
 
 #[derive(Debug)]
@@ -35,11 +43,36 @@ pub enum RollResult {
     Critical ( u32 ),
 }
 
+impl fmt::Display for RollResult {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            RollResult::Fumble ( r ) => write!(f, "Fumble! (roll {})", r),
+            RollResult::Failure ( r ) => write!(f, "Failure! (roll {})", r),
+            RollResult::Tie ( r ) => write!(f, "Tie! (roll {})", r),
+            RollResult::Potential ( r ) => write!(f, "Potential Special! (roll {})", r),
+            RollResult::PartialSuccess ( r ) => write!(f, "Partial Success! (roll {})", r),
+            RollResult::Success ( r ) => write!(f, "Success! (roll {})", r),
+            RollResult::PartialCritical ( r ) => write!(f, "Partial Critical! (roll {})", r),
+            RollResult::Critical ( r ) => write!(f, "Critical! (roll {})", r), 
+        }
+    } 
+}
+
 #[derive(Debug)]
 pub enum OpposedResult {
     AWins( RollResult ),
     BWins( RollResult ),
     Tie( RollResult ),
+}
+
+impl fmt::Display for OpposedResult {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            OpposedResult::AWins ( r ) => write!(f, "Overall Result {}", r),
+            OpposedResult::BWins ( r ) => write!(f, "Overall Result {}", r),
+            _ => write!(f, "Tie!"),
+        }
+    } 
 }
 
 pub fn get_skill_value_or_default(c: &Character, skill: &String) -> u32 {
